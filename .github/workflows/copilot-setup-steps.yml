@@ -1,0 +1,42 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      DOTFILES_REPO: ${{ vars.COPILOT_DOTFILES_REPO }}
+      DOTFILES_REF: ${{ vars.COPILOT_DOTFILES_REF }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.x'
+
+      - name: Install Neovim
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y neovim
+
+      - name: Apply Neovim key mappings from dotfiles
+        if: ${{ env.DOTFILES_REPO != '' }}
+        run: |
+          git clone --depth 1 --branch "${DOTFILES_REF:-main}" "${DOTFILES_REPO}" /tmp/dotfiles
+          mkdir -p "$HOME/.config"
+          if [ -d /tmp/dotfiles/.config/nvim ]; then
+            rm -rf "$HOME/.config/nvim"
+            cp -R /tmp/dotfiles/.config/nvim "$HOME/.config/nvim"
+          fi

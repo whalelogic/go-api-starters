@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package notes.v1;
+
+option go_package = "github.com/whalelogic/go-api-starters/gen/go/notes/v1;notesv1";
+
+message Note {
+  string id = 1;
+  string title = 2;
+  string body = 3;
+}
+
+message ListNotesRequest {}
+
+message ListNotesResponse {
+  repeated Note notes = 1;
+}
+
+service NotesService {
+  rpc ListNotes(ListNotesRequest) returns (ListNotesResponse);
+}

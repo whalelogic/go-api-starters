@@ -1,0 +1,13 @@
+go 1.22.0
+
+use (
+	./connect-rpc
+	./graphql-gqlgen
+	./grpc-basic
+	./grpc-gateway
+	./http2-h2c
+	./realtime-sse-ws
+	./rest-chi
+	./rest-openapi
+	./rest-stdlib
+)
